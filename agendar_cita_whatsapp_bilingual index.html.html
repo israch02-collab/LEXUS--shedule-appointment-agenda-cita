@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agendar cita | Book Appointment</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 24px;
+      width: 100%;
+      max-width: 540px;
+    }
+    h1 { margin: 0 0 12px; font-size: 1.5rem; }
+    p.lead { margin: 0 0 20px; font-size: .95rem; color: #666; }
+    label { display: block; margin-top: 12px; font-weight: 500; }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: .95rem;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #0077cc;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+    button:hover { background: #005fa3; }
+    .lang-select { margin-bottom: 18px; }
+    footer { margin-top: 20px; font-size: .8rem; color: #777; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="lang-select">
+      <label for="lang">Idioma / Language:</label>
+      <select id="lang">
+        <option value="es" selected>Español</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <h1 id="title">Agenda tu cita</h1>
+    <p id="subtitle" class="lead">Completa este formulario y te enviaremos los datos por WhatsApp.</p>
+
+    <form id="form">
+      <label id="label-name" for="name">Nombre completo</label>
+      <input id="name" name="name" type="text" required />
+
+      <label id="label-phone" for="phone">Teléfono</label>
+      <input id="phone" name="phone" type="tel" required />
+
+      <label id="label-email" for="email">Correo</label>
+      <input id="email" name="email" type="email" required />
+
+      <label id="label-address" for="address">Dirección</label>
+      <textarea id="address" name="address" rows="3" required></textarea>
+
+      <button type="submit" id="btn">Enviar por WhatsApp</button>
+    </form>
+
+    <footer>Hecho para Israel Cruz</footer>
+  </div>
+
+  <script>
+    const langSelect = document.getElementById('lang');
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    const labels = {
+      es: {
+        title: "Agenda tu cita",
+        subtitle: "Completa este formulario y te enviaremos los datos por WhatsApp.",
+        name: "Nombre completo",
+        phone: "Teléfono",
+        email: "Correo",
+        address: "Dirección",
+        button: "Enviar por WhatsApp",
+        message: "Hola Israel, quiero agendar una cita."
+      },
+      en: {
+        title: "Book your appointment",
+        subtitle: "Fill out this form and we will send the details to WhatsApp.",
+        name: "Full name",
+        phone: "Phone",
+        email: "Email",
+        address: "Address",
+        button: "Send via WhatsApp",
+        message: "Hello Israel, I would like to book an appointment."
+      }
+    };
+
+    function setLanguage(lang) {
+      title.textContent = labels[lang].title;
+      subtitle.textContent = labels[lang].subtitle;
+      document.getElementById('label-name').textContent = labels[lang].name;
+      document.getElementById('label-phone').textContent = labels[lang].phone;
+      document.getElementById('label-email').textContent = labels[lang].email;
+      document.getElementById('label-address').textContent = labels[lang].address;
+      document.getElementById('btn').textContent = labels[lang].button;
+    }
+
+    langSelect.addEventListener('change', (e) => {
+      setLanguage(e.target.value);
+    });
+
+    const FORM = document.getElementById('form');
+    FORM.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const lang = langSelect.value;
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const address = document.getElementById('address').value.trim();
+
+      const lines = [
+        labels[lang].message,
+        "",
+        labels[lang].name + ": " + name,
+        labels[lang].phone + ": " + phone,
+        labels[lang].email + ": " + email,
+        labels[lang].address + ": " + address
+      ];
+
+      const text = encodeURIComponent(lines.join("\n"));
+      const url = `https://wa.me/19154431280?text=${text}`;
+      window.open(url, "_blank");
+    });
+
+    // Set initial language
+    setLanguage('es');
+  </script>
+</body>
+</html>
